@@ -1,22 +1,22 @@
 variable "user" {}
 variable "key_path" {}
-variable "consul_server_count" {}
-
+variable "primary_consul" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
   owners = ["self"]
   filter {
     name = "name"
-    values = ["ubuntu-16-consul-vault*"]
+    values = ["ubuntu-16-haproxy*"]
   }
 }
 
-resource "aws_instance" "consul-vault" {
+
+resource "aws_instance" "haproxy" {
     ami = "${data.aws_ami.ubuntu.id}"
     instance_type = "t1.micro"
-    count = "${var.consul_server_count}"
-    security_groups = ["${aws_security_group.consul.name}"]
+    count = "1"
+    security_groups = ["${aws_security_group.haproxy.name}"]
     tags = {
       env = "xlb-demo"
     }
@@ -27,8 +27,7 @@ resource "aws_instance" "consul-vault" {
 
     provisioner "remote-exec" {
         inline = [
-            "echo ${var.consul_server_count} > /tmp/consul-server-count",
-            "echo ${aws_instance.consul-vault.0.private_dns} > /tmp/consul-server-addr",
+            "echo ${var.primary_consul} > /tmp/consul-server-addr",
         ]
     }
 
@@ -44,12 +43,11 @@ resource "aws_instance" "consul-vault" {
             "sudo systemctl start consul"
         ]
     }
-
 }
 
-resource "aws_security_group" "consul" {
-    name = "consul"
-    description = "Consul internal traffic + maintenance."
+resource "aws_security_group" "haproxy" {
+    name = "haproxy"
+    description = "HAProxy internal traffic + maintenance."
 
     // These are for internal traffic
     ingress {
@@ -82,10 +80,10 @@ resource "aws_security_group" "consul" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    // This is for Consul UI
+    // This is for HAProxy inbound
     ingress {
-        from_port = 8500
-        to_port = 8500
+        from_port = 80
+        to_port = 80
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }

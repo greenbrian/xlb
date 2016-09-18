@@ -11,29 +11,19 @@ module "consul-vault" {
   consul_server_count = 3
 }
 
-/*  commenting these out for now
-#########
 
 module "haproxy" {
   source = "./haproxy"
   user = "${var.user}"
   key_path = "${var.key_path}"
+  primary_consul = "${module.consul-vault.primary_consul}"
 }
+
 
 module "nginx" {
   source = "./nginx"
   user = "${var.user}"
   key_path = "${var.key_path}"
   nginx_server_count = 2
-}
-
-#########
-*/
-
-output "consul_addresses" {
-  value = ["${module.consul-vault.consul_addresses}"]
-}
-
-output "consul_ui" {
-    value = "${module.consul-vault.consul_ui}"
+  primary_consul = "${module.consul-vault.primary_consul}"
 }
