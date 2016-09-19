@@ -1,9 +1,19 @@
 # xlb
 
+## Purpose
+
+Fully provision and demonstrate a cloud based infrastructure in Amazon AWS with the following features:
+* Customized AMI operating system images built in automated fashion using Packer
+* Completely managed cloud infrastructure using Hashicorp Terraform
+* Hashicorp Consul used as a service registry and health check utility
+* Hashicorp Consul template installed to integrate with Consul to generate application configuration templates based on service availability and health
+
+
 ## Requirements and Assumptions
 
 Packer & Terraform installed  
-AWS credentials stored in ~/.aws/credentials in the following format
+An existing Amazon AWS account  
+AWS credentials stored in ~/.aws/credentials in the following format:
 
     [default]
     aws_access_key_id=AKIAIOSFODNN7EXAMPLE
@@ -16,7 +26,7 @@ Also, it assumes the user has an existing public key in ~/.ssh/id_rsa.pub
 
 
 ## Packer usage
-Use packer directory as working directory. Takes ~5 minutes to build in parallel.
+Use packer directory as working directory. Takes ~5 minutes to build 3 ami's in parallel.
 
     packer build packer.json
 
