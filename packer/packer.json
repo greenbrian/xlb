@@ -13,8 +13,7 @@
       "ami_name": "ubuntu-16-consul-vault-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {
         "OS_Version": "Ubuntu",
-        "Release": "Latest",
-        "role": "consul-vault"
+        "Release": "Latest"
       }
     },
     {
@@ -27,8 +26,7 @@
       "ami_name": "ubuntu-16-nginx-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {
         "OS_Version": "Ubuntu",
-        "Release": "Latest",
-        "role": "nginx"
+        "Release": "Latest"
       }
     },
     {
@@ -41,8 +39,7 @@
       "ami_name": "ubuntu-16-haproxy-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {
         "OS_Version": "Ubuntu",
-        "Release": "Latest",
-        "role": "haproxy"
+        "Release": "Latest"
       }
     }
   ],
@@ -53,7 +50,12 @@
       "scripts": [
         "scripts/base.sh",
         "scripts/consul.sh",
-        "scripts/consul-template.sh",
+        "scripts/consul-template.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "scripts": [
         "scripts/consul-ui.sh",
         "scripts/vault.sh"
       ],
@@ -61,22 +63,12 @@
     },
     {
       "type": "shell",
-      "scripts": [
-        "scripts/base.sh",
-        "scripts/consul.sh",
-        "scripts/consul-template.sh",
-        "scripts/haproxy.sh"
-      ],
+      "script": "scripts/haproxy.sh",
       "only": ["haproxy"]
     },
     {
       "type": "shell",
-      "scripts": [
-        "scripts/base.sh",
-        "scripts/consul.sh",
-        "scripts/consul-template.sh",
-        "scripts/nginx.sh"
-      ],
+      "script": "scripts/nginx.sh",
       "only": ["nginx"]
     },
     {
