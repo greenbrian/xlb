@@ -1,6 +1,8 @@
 variable "user" {}
 variable "key_path" {}
 variable "primary_consul" {}
+variable "subnet_id" {}
+variable "xlb_sg_id" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -11,12 +13,12 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-
 resource "aws_instance" "haproxy" {
     ami = "${data.aws_ami.ubuntu.id}"
-    instance_type = "t1.micro"
+    instance_type = "t2.micro"
     count = "1"
-    security_groups = ["${aws_security_group.haproxy.name}"]
+    subnet_id = "${var.subnet_id}"
+    vpc_security_group_ids = ["${var.xlb_sg_id}"]
     tags = {
       env = "xlb-demo"
     }
@@ -43,49 +45,11 @@ resource "aws_instance" "haproxy" {
             "sudo systemctl start consul"
         ]
     }
-}
-
-resource "aws_security_group" "haproxy" {
-    name = "haproxy"
-    description = "HAProxy internal traffic + maintenance."
-
-    // These are for internal traffic
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "tcp"
-        self = true
-    }
-
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "udp"
-        self = true
-    }
-
-    // These are for maintenance
-    ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for outbound internet access
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for HAProxy inbound
-    ingress {
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+    provisioner "remote-exec" {
+        inline = [
+            "sudo systemctl enable consul-template.service",
+            "sudo systemctl start consul-template"
+        ]
     }
 
 }

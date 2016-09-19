@@ -13,3 +13,26 @@ echo "Installing Consul Template..."
 unzip -q consul_template.zip >/dev/null
 chmod +x consul-template
 sudo mv consul-template /usr/local/bin/consul-template
+
+echo "Installing Systemd service..."
+sudo mkdir -p /etc/systemd/system/consul-template.d
+sudo mkdir -p /etc/systemd/system/consul-template.d/templates
+
+
+sudo bash -c "cat >/etc/systemd/system/consul-template.service" << 'EOF'
+[Unit]
+Description=consul-template agent
+Requires=network-online.target
+After=network-online.target consul.service
+#After=network-online.target consul.service vault.service
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/bin/consul-template -config=/etc/systemd/system/consul-template.d/consul-template.json
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo chmod 0644 /etc/systemd/system/consul.service

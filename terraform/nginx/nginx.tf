@@ -2,6 +2,8 @@ variable "user" {}
 variable "key_path" {}
 variable "primary_consul" {}
 variable "nginx_server_count" {}
+variable "subnet_id" {}
+variable "xlb_sg_id" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -15,9 +17,10 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "nginx" {
     ami = "${data.aws_ami.ubuntu.id}"
-    instance_type = "t1.micro"
+    instance_type = "t2.micro"
     count = "${var.nginx_server_count}"
-    security_groups = ["${aws_security_group.nginx.name}"]
+    subnet_id = "${var.subnet_id}"
+    vpc_security_group_ids = ["${var.xlb_sg_id}"]
     tags = {
       env = "xlb-demo"
     }
@@ -44,49 +47,4 @@ resource "aws_instance" "nginx" {
             "sudo systemctl start consul"
         ]
     }
-}
-
-resource "aws_security_group" "nginx" {
-    name = "nginx"
-    description = "Nginx internal traffic + maintenance."
-
-    // These are for internal traffic
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "tcp"
-        self = true
-    }
-
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "udp"
-        self = true
-    }
-
-    // These are for maintenance
-    ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for outbound internet access
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for nginx inbound
-    ingress {
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
 }

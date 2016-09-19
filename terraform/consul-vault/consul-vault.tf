@@ -1,7 +1,8 @@
 variable "user" {}
 variable "key_path" {}
 variable "consul_server_count" {}
-
+variable "subnet_id" {}
+variable "xlb_sg_id" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -14,9 +15,10 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "consul-vault" {
     ami = "${data.aws_ami.ubuntu.id}"
-    instance_type = "t1.micro"
+    instance_type = "t2.micro"
     count = "${var.consul_server_count}"
-    security_groups = ["${aws_security_group.consul.name}"]
+    subnet_id = "${var.subnet_id}"
+    vpc_security_group_ids = ["${var.xlb_sg_id}"]
     tags = {
       env = "xlb-demo"
     }
@@ -43,51 +45,6 @@ resource "aws_instance" "consul-vault" {
             "sudo systemctl enable consul.service",
             "sudo systemctl start consul"
         ]
-    }
-
-}
-
-resource "aws_security_group" "consul" {
-    name = "consul"
-    description = "Consul internal traffic + maintenance."
-
-    // These are for internal traffic
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "tcp"
-        self = true
-    }
-
-    ingress {
-        from_port = 0
-        to_port = 65535
-        protocol = "udp"
-        self = true
-    }
-
-    // These are for maintenance
-    ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for outbound internet access
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    // This is for Consul UI
-    ingress {
-        from_port = 8500
-        to_port = 8500
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
     }
 
 }

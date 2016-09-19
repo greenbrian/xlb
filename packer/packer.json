@@ -7,8 +7,8 @@
       "name": "consul-vault",
       "type": "amazon-ebs",
       "region": "us-west-1",
-      "source_ami": "ami-dca9e5bc",
-      "instance_type": "t1.micro",
+      "source_ami": "ami-a9a8e4c9",
+      "instance_type": "t2.micro",
       "ssh_username": "ubuntu",
       "ami_name": "ubuntu-16-consul-vault-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {
@@ -21,8 +21,8 @@
       "name": "nginx",
       "type": "amazon-ebs",
       "region": "us-west-1",
-      "source_ami": "ami-dca9e5bc",
-      "instance_type": "t1.micro",
+      "source_ami": "ami-a9a8e4c9",
+      "instance_type": "t2.micro",
       "ssh_username": "ubuntu",
       "ami_name": "ubuntu-16-nginx-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {
@@ -35,8 +35,8 @@
       "name": "haproxy",
       "type": "amazon-ebs",
       "region": "us-west-1",
-      "source_ami": "ami-dca9e5bc",
-      "instance_type": "t1.micro",
+      "source_ami": "ami-a9a8e4c9",
+      "instance_type": "t2.micro",
       "ssh_username": "ubuntu",
       "ami_name": "ubuntu-16-haproxy-{{isotime \"2006-01-02-15-04\"}}",
       "tags": {

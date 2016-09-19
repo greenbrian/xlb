@@ -16,7 +16,7 @@ Also, it assumes the user has an existing public key in ~/.ssh/id_rsa.pub
 
 
 ## Packer usage
-Use packer directory as working directory. Takes 5-6 minutes to build in parallel.
+Use packer directory as working directory. Takes ~5 minutes to build in parallel.
 
     packer build packer.json
 
