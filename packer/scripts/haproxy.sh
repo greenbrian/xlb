@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-# install haproxy
+echo "Installing HAProxy..."
 sudo apt-get install -y -q haproxy
 
-# setup haproxy iptables rules
+echo "Configuring HAProxy firewall rules..."
 sudo iptables -I INPUT -s 0/0 -p tcp --dport 80 -j ACCEPT
-
 sudo netfilter-persistent save
 sudo netfilter-persistent reload
 
-# setup haproxy configuration template
+echo "Install Consul template configuration file for HAProxy..."
 sudo bash -c "cat >/etc/systemd/system/consul-template.d/templates/haproxy.cfg.ctmpl" << HAPROXY
 global
    log /dev/log local0
@@ -40,7 +39,7 @@ backend http_back
    server {{.Node}} {{.Address}}:{{.Port}} check{{end}}
 HAPROXY
 
-# setup consul template configuration file
+echo "Configuring Consul Template for HAProxy..."
 sudo bash -c "cat >/etc/systemd/system/consul-template.d/consul-template.json" << EOF
 consul = "127.0.0.1:8500"
 template {

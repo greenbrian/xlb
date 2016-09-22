@@ -47,4 +47,22 @@ resource "aws_instance" "consul-vault" {
         ]
     }
 
+    provisioner "remote-exec" {
+        inline = [
+            "sudo systemctl enable vault.service",
+            "sudo systemctl start vault"
+        ]
+    }
+    provisioner "file" {
+        source = "${path.module}/scripts/setup_vault.sh",
+        destination = "/tmp/setup_vault.sh"
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "sudo chmod +x /tmp/setup_vault.sh",
+            "nohup /tmp/setup_vault.sh &",
+            "sleep 1"
+        ]
+    }
 }

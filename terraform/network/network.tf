@@ -54,6 +54,22 @@ resource "aws_security_group" "xlb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Vault communication
+  ingress {
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Vault stats
+  ingress {
+    from_port   = 8125
+    to_port     = 8125
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Consul communication2
   ingress {
     from_port   = 8400
