@@ -47,4 +47,14 @@ resource "aws_instance" "nginx" {
             "sudo systemctl start consul"
         ]
     }
+    provisioner "file" {
+        source = "${path.module}/scripts/secret_page.sh",
+        destination = "/tmp/secret_page.sh"
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "sudo chmod +x /tmp/secret_page.sh",
+        ]
+    }
+
 }

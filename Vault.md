@@ -57,3 +57,19 @@ Then it needs to be unsealed using 3 of the above 5 addresses, on *each* Vault s
 
     # curl -s http://127.0.0.1:8200/v1/sys/init
     {"initialized":true}
+
+
+    # Curl post secret to vault
+    export ROOT_TOKEN=$(cat /tmp/vault.init | grep 'Root' | awk '{print $4}')
+    curl \
+    -H "X-Vault-Token: $ROOT_TOKEN" \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d '{"value":"MySomewhatLongPassword"}' \
+    http://127.0.0.1:8200/v1/secret/passwordvault
+
+    # Curl retrieve secret from vault
+    curl -s \
+    -H "X-Vault-Token: $ROOT_TOKEN" \
+    -X GET \
+    http://127.0.0.1:8200/v1/secret/passwordvault | jq

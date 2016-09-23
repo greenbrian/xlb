@@ -15,10 +15,7 @@ chmod +x consul-template
 sudo mv consul-template /usr/local/bin/consul-template
 
 echo "Installing Systemd service..."
-sudo mkdir -p /etc/systemd/system/consul-template.d
 sudo mkdir -p /etc/systemd/system/consul-template.d/templates
-
-
 sudo bash -c "cat >/etc/systemd/system/consul-template.service" << 'EOF'
 [Unit]
 Description=consul-template agent

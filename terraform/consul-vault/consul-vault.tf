@@ -53,6 +53,12 @@ resource "aws_instance" "consul-vault" {
             "sudo systemctl start vault"
         ]
     }
+
+/*  ###################   WARNING    #########################  */
+/* The following steps are not recommended for production usage */
+/* The script will initialize your vault and store the secret   */
+/* keys insecurely and is only used for demonstration purposes  */
+
     provisioner "file" {
         source = "${path.module}/scripts/setup_vault.sh",
         destination = "/tmp/setup_vault.sh"
