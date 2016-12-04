@@ -1,5 +1,6 @@
 variable "user" {}
 variable "key_path" {}
+variable "private_key" {}
 variable "primary_consul" {}
 variable "nginx_server_count" {}
 variable "subnet_id" {}
@@ -26,7 +27,7 @@ resource "aws_instance" "nginx" {
     }
     connection {
         user = "${var.user}"
-        key_file = "${var.key_path}"
+        private_key = "${var.private_key}"
     }
 
     provisioner "remote-exec" {
