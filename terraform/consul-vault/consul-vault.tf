@@ -53,6 +53,13 @@ resource "aws_instance" "consul-vault" {
 
     provisioner "remote-exec" {
         inline = [
+            "sudo systemctl enable nomad.service",
+            "sudo systemctl start nomad"
+        ]
+    }
+
+    provisioner "remote-exec" {
+        inline = [
             "sudo systemctl enable vault.service",
             "sudo systemctl start vault"
         ]

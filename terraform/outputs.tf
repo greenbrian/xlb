@@ -21,3 +21,7 @@ output "haproxy_stats" {
 output "haproxy_web_frontend" {
     value = "${module.haproxy.haproxy_web_frontend}"
 }
+
+output "consul_client_addresses" {
+  value = ["${module.consul-vault.nomad_client_addresses}"]
+}
