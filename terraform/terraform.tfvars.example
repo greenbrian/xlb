@@ -1,2 +1,3 @@
 user     = "YOUR_USER_ID"
 key_path = "~/.ssh/id_rsa"
+private_key = "YOUR KEY"

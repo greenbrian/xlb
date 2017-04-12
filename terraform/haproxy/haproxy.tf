@@ -1,5 +1,6 @@
 variable "user" {}
 variable "key_path" {}
+variable "private_key" {}
 variable "primary_consul" {}
 variable "subnet_id" {}
 variable "xlb_sg_id" {}
@@ -24,7 +25,7 @@ resource "aws_instance" "haproxy" {
     }
     connection {
         user = "${var.user}"
-        key_file = "${var.key_path}"
+        private_key = "${var.private_key}"
     }
 
     provisioner "remote-exec" {
